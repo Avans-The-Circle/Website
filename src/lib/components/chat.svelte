@@ -68,6 +68,9 @@
     }
 
     async function sendMessage() {
+        if (message === "") {
+            return;
+        }
         if (!isSocketConnected()) {
             console.error("Websocket not connected.", socket)
             alert("Chat server connection issue. Check console for more info.")
@@ -79,6 +82,13 @@
             message: message
         }));
         message = "";
+    }
+
+    async function keyDownChat(event) {
+        console.log("event", event)
+        if (event.keyCode === 13) {
+            await sendMessage()
+        }
     }
 
     const scrollSmoothlyToBottom = () => {
@@ -101,7 +111,7 @@
       {/each}
     </div>
     <div class="position-absolute bottom-0" style="bottom: 0;">
-      <input class="d-inline-block" type="text" bind:value={message}>
+      <input class="d-inline-block" on:keydown={keyDownChat} type="text" bind:value={message}>
       <input class="d-inline-block" type="submit" on:click={sendMessage}>
     </div>
   {/if}
