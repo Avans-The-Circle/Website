@@ -1,6 +1,5 @@
 For design using:
-https://sveltestrap.js.org/?path=/story/components--fade 
-
+https://sveltestrap.js.org/?path=/story/components--fade
 
 # create-svelte
 
