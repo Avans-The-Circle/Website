@@ -86,7 +86,7 @@
     }
 </script>
 
-<div class="bg-info position-relative" style="height: calc(100% - 2.4rem)">
+<div class="bg-info position-relative" style="height: 100%">
   {#if (socket === undefined || socket.readyState !== WebSocket.OPEN)}
     <h1>Disconnected</h1>
   {/if}
