@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { variables } from '$lib/variables';
 
     let socket;
     let message = "";
@@ -18,7 +19,7 @@
     }
     onMount(() => {
         const connectToSocket = () => {
-            socket = new WebSocket(`ws://${import.meta.env.VITE_CHATSERVER_URL}`)
+            socket = new WebSocket(`ws://${variables.CHATSERVER_URL}`)
         }
         connectToSocket();
         socket.addEventListener("open", () => {
