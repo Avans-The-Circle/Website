@@ -6,6 +6,14 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - main
+
+env:
+  VITE_CHATSERVER_URL: localhost:8080
+  VITE_STREAM_APP_ID: 3a318fe4690240539fda85b620e2078d
+  VITE_STREAM_APP_TOKEN: 0063a318fe4690240539fda85b620e2078dIACWVv/mJHhyasyKRs1VDnt7YmWPOLE8BLIOQLm3Ns1TqcDkHiEAAAAAEABF5qhUilWoYgEAAQCIVahi
+  VITE_STREAM_APP_CHANNEL: circlelive
+
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest

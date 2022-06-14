@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { variables } from '$lib/variables';
 
     let socket;
     let message = "";
@@ -18,7 +19,7 @@
     }
     onMount(() => {
         const connectToSocket = () => {
-            socket = new WebSocket(`ws://${import.meta.env.VITE_CHATSERVER_URL}`)
+            socket = new WebSocket(`ws://${variables.CHATSERVER_URL}`)
         }
         connectToSocket();
         socket.addEventListener("open", () => {
@@ -86,7 +87,7 @@
     }
 </script>
 
-<div class="bg-info position-relative" style="height: calc(100% - 2.4rem)">
+<div class="bg-info position-relative" style="height: 100%">
   {#if (socket === undefined || socket.readyState !== WebSocket.OPEN)}
     <h1>Disconnected</h1>
   {/if}
