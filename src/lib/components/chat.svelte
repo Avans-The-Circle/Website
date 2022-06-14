@@ -16,10 +16,9 @@
             messages = [];
         }
     }
-    $: console.log("asaa", messages)
     onMount(() => {
         const connectToSocket = () => {
-            socket = new WebSocket("ws://145.49.35.115:8080")
+            socket = new WebSocket(`ws://${import.meta.env.VITE_CHATSERVER_URL}`)
         }
         connectToSocket();
         socket.addEventListener("open", () => {
@@ -49,6 +48,7 @@
             switch (data.type) {
                 case "CHAT_MESSAGE":
                     messages.push(data);
+                    // For reactivity:
                     messages = messages;
                     setTimeout(() => {
                         scrollSmoothlyToBottom();
@@ -77,7 +77,7 @@
             sender: "Je moeder",
             message: message
         }));
-        // message = "";
+        message = "";
     }
 
     const scrollSmoothlyToBottom = () => {
@@ -87,6 +87,9 @@
 </script>
 
 <div class="bg-info position-relative" style="height: calc(100% - 2.4rem)">
+  {#if (socket === undefined || socket.readyState !== WebSocket.OPEN)}
+    <h1>Disconnected</h1>
+  {/if}
   {#if streamId !== "-1"}
     <div class="overflow-auto" id="chatContainer-{randomId}" style="max-height: 40vh;">
       {#each messages as message}
