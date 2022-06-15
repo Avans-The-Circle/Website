@@ -19,7 +19,7 @@
     }
     onMount(() => {
         const connectToSocket = () => {
-            socket = new WebSocket(`wss://${variables.CHATSERVER_URL}`)
+            socket = new WebSocket(`${variables.CHATSERVER_URL}`)
         }
         connectToSocket();
         socket.addEventListener("open", () => {

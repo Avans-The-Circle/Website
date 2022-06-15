@@ -17,7 +17,7 @@
       {#if streamId === "-1"}
         <h1>Disconnected...</h1>
       {:else }
-        <Stream />
+        <Stream bind:streamId={streamId} />
       {/if}
     </div>
     <div class="col-4">
