@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { variables } from '$lib/variables';
+    import forge from "node-forge";
 
     let socket;
     let message = "";
@@ -19,7 +20,8 @@
     }
     onMount(() => {
         const connectToSocket = () => {
-            socket = new WebSocket(`${variables.CHATSERVER_URL}`)
+            //socket = new WebSocket(`${variables.CHATSERVER_URL}`)
+          socket = new WebSocket("ws://localhost:8080")
         }
         connectToSocket();
         socket.addEventListener("open", () => {
@@ -68,6 +70,10 @@
     }
 
     async function sendMessage() {
+      let pem = getCookie("certificate");
+      let privateKey = getCookie("privateKey");
+      console.log(pem);
+      console.log(privateKey);
         if (message === "") {
             return;
         }
@@ -94,6 +100,21 @@
     const scrollSmoothlyToBottom = () => {
         const elmt = document.getElementById(`chatContainer-${randomId}`);
         elmt.scroll({top: elmt.scrollHeight, behavior: 'smooth'});
+    }
+
+    function getCookie(cname) {
+      let name = cname + "=";
+      let ca = document.cookie.split(';');
+      for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
     }
 </script>
 
