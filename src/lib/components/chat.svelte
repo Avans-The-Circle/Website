@@ -2,12 +2,14 @@
     import { onMount } from "svelte";
     import { variables } from '$lib/variables';
     import forge from "node-forge";
-    import * as path from "path";
-    import * as fs from "fs";
 
-    let pki = forge.pki;
-    let keys = pki.rsa.generateKeyPair(2048);
-    console.log(keys);
+    let __dirname = "src/lib/components";
+    //let pKey = fs.readFileSync(path.join(__dirname, "private.pem"), 'utf8');
+    let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
+    //let puKey = fs.readFileSync(path.join(__dirname, "public.pem"), 'utf8');
+    let publicKey = forge.pki.publicKeyFromPem(variables.PUBLIC_KEY);
+    console.log(privateKey);
+    console.log(publicKey);
     let socket;
     let message = "";
     let messages = [];
@@ -57,7 +59,7 @@
                     let md = forge.md.sha256.create();
                     md.update(data.message, "utf8");
                     let signature = data.signature;
-                    let verified = keys.publicKey.verify(md.digest().bytes(), signature);
+                    let verified = publicKey.verify(md.digest().bytes(), signature);
                     if (verified){
                       messages.push(data);
                       // For reactivity:
@@ -90,7 +92,7 @@
         }
         let md = forge.md.sha256.create();
         md.update(message, "utf8")
-        let signature = keys.privateKey.sign(md);
+        let signature = privateKey.sign(md);
         console.log(signature);
         socket.send(JSON.stringify({
             type: "SEND_MESSAGE",
