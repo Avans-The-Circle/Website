@@ -2,7 +2,12 @@
     import { onMount } from "svelte";
     import { variables } from '$lib/variables';
     import forge from "node-forge";
+    import * as path from "path";
+    import * as fs from "fs";
 
+    let pki = forge.pki;
+    let keys = pki.rsa.generateKeyPair(2048);
+    console.log(keys);
     let socket;
     let message = "";
     let messages = [];
@@ -20,8 +25,7 @@
     }
     onMount(() => {
         const connectToSocket = () => {
-            //socket = new WebSocket(`${variables.CHATSERVER_URL}`)
-          socket = new WebSocket("ws://localhost:8080")
+            socket = new WebSocket(`${variables.CHATSERVER_URL}`)
         }
         connectToSocket();
         socket.addEventListener("open", () => {
@@ -50,9 +54,15 @@
             const data = JSON.parse(event.data);
             switch (data.type) {
                 case "CHAT_MESSAGE":
-                    messages.push(data);
-                    // For reactivity:
-                    messages = messages;
+                    let md = forge.md.sha256.create();
+                    md.update(data.message, "utf8");
+                    let signature = data.signature;
+                    let verified = keys.publicKey.verify(md.digest().bytes(), signature);
+                    if (verified){
+                      messages.push(data);
+                      // For reactivity:
+                      messages = messages;
+                    }
                     setTimeout(() => {
                         scrollSmoothlyToBottom();
                     }, 250)
@@ -70,10 +80,6 @@
     }
 
     async function sendMessage() {
-      let pem = getCookie("certificate");
-      let privateKey = getCookie("privateKey");
-      console.log(pem);
-      console.log(privateKey);
         if (message === "") {
             return;
         }
@@ -82,10 +88,15 @@
             alert("Chat server connection issue. Check console for more info.")
             return;
         }
+        let md = forge.md.sha256.create();
+        md.update(message, "utf8")
+        let signature = keys.privateKey.sign(md);
+        console.log(signature);
         socket.send(JSON.stringify({
             type: "SEND_MESSAGE",
             sender: "Je moeder",
-            message: message
+            message: message,
+            signature: signature
         }));
         message = "";
     }
@@ -100,21 +111,6 @@
     const scrollSmoothlyToBottom = () => {
         const elmt = document.getElementById(`chatContainer-${randomId}`);
         elmt.scroll({top: elmt.scrollHeight, behavior: 'smooth'});
-    }
-
-    function getCookie(cname) {
-      let name = cname + "=";
-      let ca = document.cookie.split(';');
-      for(let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-      return "";
     }
 </script>
 
