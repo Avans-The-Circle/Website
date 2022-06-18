@@ -44,7 +44,7 @@
             console.error(`[websocket_error] ${error.message}`);
         };
         socket.onmessage = function (event) {
-            console.log(`[websocket_message] Data received from server: ${event.data}`);
+            //console.log(`[websocket_message] Data received from server: ${event.data}`);
             const data = JSON.parse(event.data);
             switch (data.type) {
                 case "CHAT_MESSAGE":
