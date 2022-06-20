@@ -97,8 +97,8 @@
                     console.log("3")
                     sourceBuffer.onupdateend = (e) => {
                         // console.log("e?", e)
-                        // mediaSource.endOfStream();
-                        // video_output.play();
+                        mediaSource.endOfStream();
+                        video_output.play();
                     };
                 }
             } else {
@@ -127,6 +127,9 @@
                         if (sourceBuffer) {
                             console.log("sourceBuffer check")
                             sourceBuffer.appendBuffer(videoBuff);
+                            setTimeout(() => {
+                                sourceBuffer.remove(0, 2)
+                            }, 2000)
                             console.log("3")
                             sourceBuffer.onupdateend = (e) => {
                                 // console.log("e?", e)
@@ -154,5 +157,5 @@
 <div class="bg-warning position-relative" style="height: 100%; width: 100%">
   123
   <!--<canvas id="canvas-{randomId}" style="width: 100%"></canvas>-->
-  <video id="video-{randomId}" style="max-width: 100%; max-height: 100%" controls autoplay></video>
+  <video id="video-{randomId}" style="max-width: 100%; max-height: 100%" controls autoplay muted></video>
 </div>

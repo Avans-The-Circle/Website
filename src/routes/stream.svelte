@@ -60,47 +60,26 @@
         });
 
         mediaRecorder.ondataavailable = (e) => {
-            console.log('mimetype:', mediaRecorder.mimeType)
-            // let blob = e.data
-            // blob = new Blob([e.data], {'type': 'video/webm; codecs="vp9,opus"'});
-            // socket.send(blob)
-            // console.log("frame", blob)
-            // media.push(e.data)
-
-            const blob = e.data;
-            blobToBase64(blob).then((media_blob) => {
+            media.push(e.data)
+        }
+        mediaRecorder.onstop = function () {
+            // const blob = new Blob(media, {'type': 'audio/ogg; codecs=opus'});
+            const blob = new Blob(media, {'type': 'video/webm;codecs=VP9'});
+            media = [];
+            video_target.src = window.URL.createObjectURL(blob);
+            blobToBase64(blob).then(async (media_blob) => {
+                frameCounter++;
                 const data = {
                     type: "STREAM_FRAME",
                     frame: compress(media_blob),
                     frame_timing: (new Date()).getTime(),
                     frameCounter: frameCounter
                 }
-                send(data, socket);
+                socket.send(JSON.stringify(data));
+                // send(data, );
                 console.log(`[${data.frameCounter}]Sending frame: ${data.frame_timing}`);
             })
-
         }
-        mediaRecorder.onstop = function (e) {
-            console.log(e);
-        }
-        // mediaRecorder.onstop = function () {
-        //     // const blob = new Blob(media, {'type': 'audio/ogg; codecs=opus'});
-        //     const blob = new Blob(media, {'type': 'video/webm; codecs=vp9'});
-        //     video_target.src = window.URL.createObjectURL(blob);
-        //     frameCounter++;
-        //     blobToBase64(blob).then((media_blob) => {
-        //         console.log("media: ", media, media_blob)
-        //         const data = {
-        //             type: "STREAM_FRAME",
-        //             frame: compress(media_blob),
-        //             frame_timing: (new Date()).getTime(),
-        //             frameCounter: frameCounter
-        //         }
-        //         send(data, socket);
-        //         console.log(`[${data.frameCounter}]Sending frame: ${data.frame_timing}`);
-        //     })
-        //     media = [];
-        // }
 
         function blobToBase64(blob) {
             return new Promise((resolve, _) => {
@@ -123,26 +102,18 @@
 
         function createAndSendVideo() {
             startRecording();
-            setInterval(() => mediaRecorder.requestData(), 1000)
-            // setTimeout(stopRecording, 2000)
+            // setInterval(() => mediaRecorder.requestData(), 1000)
+            setTimeout(() => {
+                stopRecording();
+                createAndSendVideo();
+            }, 2000)
         }
 
         createAndSendVideo();
-
     });
-
-
-    async function send(compFrameData, socket) {
-        const dataJson = JSON.stringify(compFrameData);
-        let blob = new Blob([dataJson]);
-        socket.send(blob);
-
-        // const dataString = JSON.stringify({compressed: true, data: compress(dataJson)});
-        // socket.send(dataString);
-    }
 </script>
 
 <video autoplay />
-<video id="video" autoplay controls />
+<video id="video" autoplay controls muted />
 <audio autoplay />
 <audio id="audio" autoplay />
