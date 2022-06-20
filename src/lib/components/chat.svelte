@@ -43,22 +43,24 @@
         socket.onerror = function (error) {
             console.error(`[websocket_error] ${error.message}`);
         };
-        socket.onmessage = function (event) {
-            //console.log(`[websocket_message] Data received from server: ${event.data}`);
-            const data = JSON.parse(event.data);
-            switch (data.type) {
-                case "CHAT_MESSAGE":
-                    messages.push(data);
-                    // For reactivity:
-                    messages = messages;
-                    setTimeout(() => {
-                        scrollSmoothlyToBottom();
-                    }, 250)
-                    console.log("messages: ", messages)
-                    break;
-                case "CONFIRM_CONNECTION":
-                    connectedStreamId = data.streamId;
-                    break;
+        socket.onmessage = function (event, aaa) {
+            if (event.data instanceof String) {
+                //console.log(`[websocket_message] Data received from server: ${event.data}`);
+                const data = JSON.parse(event.data);
+                switch (data.type) {
+                    case "CHAT_MESSAGE":
+                        messages.push(data);
+                        // For reactivity:
+                        messages = messages;
+                        setTimeout(() => {
+                            scrollSmoothlyToBottom();
+                        }, 250)
+                        console.log("messages: ", messages)
+                        break;
+                    case "CONFIRM_CONNECTION":
+                        connectedStreamId = data.streamId;
+                        break;
+                }
             }
         };
     })

@@ -1,30 +1,32 @@
 {
-    "name": "the-circle",
-    "version": "1.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "svelte-kit dev",
-        "build": "svelte-kit build",
-        "package": "svelte-kit package",
-        "preview": "svelte-kit preview",
-        "prepare": "svelte-kit sync",
-        "test": "playwright test",
-        "check": "svelte-check --tsconfig ./tsconfig.json",
-        "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
-    },
-    "devDependencies": {
-        "@playwright/test": "^1.22.2",
-        "@sveltejs/adapter-auto": "next",
-        "@sveltejs/kit": "next",
-        "svelte": "^3.44.0",
-        "svelte-check": "^2.7.1",
-        "svelte-preprocess": "^4.10.6",
-        "tslib": "^2.3.1",
-        "typescript": "^4.7.2"
-    },
-    "dependencies": {
-        "@sveltejs/adapter-static": "^1.0.0-next.34",
-        "agora-rtc-sdk": "^3.6.10",
-        "lz-string": "^1.4.4"
-    }
+  "name": "the-circle",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "svelte-kit dev --host 0.0.0.0",
+    "https": "svelte-kit dev --host 0.0.0.0 --https",
+    "build": "svelte-kit build",
+    "package": "svelte-kit package",
+    "preview": "svelte-kit preview",
+    "prepare": "svelte-kit sync",
+    "test": "playwright test",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.22.2",
+    "@sveltejs/adapter-auto": "next",
+    "@sveltejs/kit": "next",
+    "svelte": "^3.44.0",
+    "svelte-check": "^2.7.1",
+    "svelte-preprocess": "^4.10.6",
+    "tslib": "^2.3.1",
+    "typescript": "^4.7.2"
+  },
+  "dependencies": {
+    "@sveltejs/adapter-static": "^1.0.0-next.34",
+    "agora-rtc-sdk": "^3.6.10",
+    "lz-string": "^1.4.4",
+    "videorecorderjs": "^1.0.1"
+  }
 }
