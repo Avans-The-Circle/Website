@@ -1,30 +1,30 @@
 <script>
     import { variables } from "$lib/variables";
     import { onMount } from "svelte";
-    import { compress } from "lz-string";
+    import { compress, decompress } from "lz-string";
 
     onMount(() => {
         const video = document.querySelector("video");
 
         // request access to webcam
         navigator.mediaDevices
-            .getUserMedia({ video: { width: 426, height: 240 } })
+            .getUserMedia({video: {width: 426, height: 240}})
             .then((stream) => (video.srcObject = stream));
 
         // returns a frame encoded in base64
         const getFrame = () => {
-            console.log("Beginning getframe");
             const canvas = document.createElement("canvas");
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext("2d").drawImage(video, 0, 0);
             const data = canvas.toDataURL("image/png");
-            console.log("ending getframe");
             return data;
         };
 
-        const FPS = 20;
+        const FPS = 12;
+        let frameCounter = 0;
         const socket = new WebSocket(`${variables.CHATSERVER_URL}`);
+        let bufferArray = [];
         socket.onopen = () => {
             socket.send(
                 JSON.stringify({
@@ -32,31 +32,43 @@
                     streamId: "1",
                 })
             );
-            //console.log(`Connected to ${variables.CHATSERVER_URL}`);
-            setInterval(() => {
+
+            socket.onmessage = function (event) {
+                //console.log(`[websocket_message] Data received from server: ${event.data}`);
+                const data = JSON.parse(event.data);
+                switch (data.type) {
+                    case "SEND_NEXT_FRAME":
+                        console.log("received request for next frame")
+                        sendFrame();
+                        break;
+                }
+            };
+
+            async function sendFrame() {
+                frameCounter++;
                 const frameData = getFrame();
-                console.log("Beginning compression");
                 const compFrameData = compress(frameData);
-                console.log("ending compression");
-                console.log(
-                    "Frame data ",
-                    frameData.length,
-                    compFrameData.length
-                );
-                send(compFrameData,socket);
-                console.log("Buffered amount of data ", socket.bufferedAmount);
-                console.log("__________________________________________");
-            }, 1000 / FPS);
+                const data = {
+                    type: "STREAM_FRAME",
+                    frame: compFrameData,
+                    frame_timing: (new Date()).getTime(),
+                    frameCounter: frameCounter
+                }
+                send(data, socket);
+                console.log(`[${data.frameCounter}]Sending frame: ${data.frame_timing}`);
+            }
+
+            sendFrame();
         };
     });
 
     async function send(compFrameData, socket) {
-        socket.send(
-            JSON.stringify({
-                type: "STREAM_FRAME",
-                frame: compFrameData,
-            })
-        );
+        const dataJson = JSON.stringify(compFrameData);
+        let blob = new Blob([dataJson]);
+        socket.send(blob);
+
+        // const dataString = JSON.stringify({compressed: true, data: compress(dataJson)});
+        // socket.send(dataString);
     }
 </script>
 
