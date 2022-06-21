@@ -75,7 +75,7 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext("2d").drawImage(video, 0, 0);
-        return canvas.toDataURL("image/png", 1.0);
+        return canvas.toDataURL("image/png");
     };
 
     function sendFrame() {
