@@ -146,6 +146,7 @@
 <label for="videoStream">View count: {clientCount}</label><br>
 <label>Amount of frames send: {frameCounter}</label><br>
 <label>Streaming with {fps} FPS</label><br>
+<label>Confirmed streamer name {connectedStreamId}</label><br>
 <br>
 <br>
 <div class="row">

@@ -14,6 +14,7 @@
     let streamChild;
     let chatChild;
     let pageActive = false;
+    let streamerList = [];
 
     $: {
         if (isSocketConnected() && connectedStreamId !== streamId) {
@@ -73,6 +74,10 @@
                 case "CHAT_MESSAGE":
                     chatChild.addChat(data);
                     break;
+                case "AVAILABLE_CLIENTS":
+                    streamerList = data.streamerList
+                    console.log("streamerList:", streamerList)
+                    break;
                 case "INCOMMING_STREAM":
                     clientCount = data.clientCount
                     streamChild.processStream(data.frame)
@@ -119,10 +124,9 @@
 <div class="col" style="height: calc(49vh - 1.5rem); padding: 0;">
   <select class="form-select" aria-label="Please select a stream..." bind:value={streamId}>
     <option value="-1">Disconnected</option>
-    <option value="1">Stream 1</option>
-    <option value="2">Stream 2</option>
-    <option value="3">Stream 3</option>
-    <option value="4">Stream 4</option>
+    {#each streamerList as streamerId}
+      <option value="{streamerId}">Streamer {streamerId}</option>
+    {/each}
   </select>
   <div class="row" style="height: calc(100% - 2.4rem)">
     {#if (socket === undefined || socket.readyState !== WebSocket.OPEN)}
