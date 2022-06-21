@@ -2,11 +2,14 @@
     import { onDestroy, onMount } from "svelte";
     import { decompress } from "lz-string";
     import { variables } from '$lib/variables';
+    import forge from "node-forge";
 
     import Chat from "/src/lib/components/chat.svelte"
     import Stream from "/src/lib/components/stream.svelte"
 
 
+    let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
+    let publicKey = forge.pki.publicKeyFromPem(variables.PUBLIC_KEY);
     let clientCount = 0;
     let streamId = "-1";
     let connectedStreamId = "";
@@ -66,13 +69,22 @@
         socket.onerror = function (error) {
             console.error(`[websocket_error] ${error.message}`);
         };
+        let md;
+        let signature;
+        let verified;
         socket.onmessage = function (event) {
             //console.log(`[websocket_message] Data received from server: ${event.data}`);
             const data = JSON.parse(event.data);
             console.log("[Socket]Incomming:", data.type)
             switch (data.type) {
                 case "CHAT_MESSAGE":
-                    chatChild.addChat(data);
+                    md = forge.md.sha256.create();
+                    md.update(data.message, "utf8");
+                    signature = data.signature;
+                    verified = publicKey.verify(md.digest().bytes(), signature);
+                    if (verified) {
+                        chatChild.addChat(data);
+                    }
                     break;
                 case "AVAILABLE_CLIENTS":
                     streamerList = data.streamerList
@@ -80,7 +92,13 @@
                     break;
                 case "INCOMMING_STREAM":
                     clientCount = data.clientCount
-                    streamChild.processStream(data.frame)
+                    md = forge.md.sha256.create();
+                    md.update(data.frame);
+                    signature = data.signature;
+                    verified = publicKey.verify(md.digest().bytes(), signature);
+                    if (verified) {
+                        streamChild.processStream(data.frame)
+                    }
                     break;
                 case "CONFIRM_CONNECTION":
                     connectedStreamId = data.streamId;
@@ -113,10 +131,14 @@
             alert("Chat server connection issue. Check console for more info.")
             return;
         }
+        let md = forge.md.sha256.create();
+        md.update(message, "utf8")
+        let signature = privateKey.sign(md);
         socket.send(JSON.stringify({
             type: "SEND_MESSAGE",
             sender: "Je moeder",
-            message: message
+            message: message,
+            signature: signature
         }));
     }
 </script>

@@ -4,7 +4,6 @@
     import { decompress } from 'lz-string';
     import forge from "node-forge";
 
-    let publicKey = forge.pki.publicKeyFromPem(variables.PUBLIC_KEY);
     const randomId = Math.round(Math.random() * 10000000000);
     export let clientCount = 0;
     let ctx;
