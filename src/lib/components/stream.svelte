@@ -48,12 +48,11 @@
         const canvas = document.getElementById(`canvas-${randomId}`);
         const ctx = canvas.getContext("2d");
         socket.onmessage = function (event) {
-            console.log(`[websocket_message] Data received from server: ${event.data}`);
+            //console.log(`[websocket_message] Data received from server: ${event.data}`);
             const data = JSON.parse(event.data);
             switch (data.type) {
                 case "INCOMMING_STREAM":
                     // const img = document.querySelector('img');
-
                     const image = new Image();
                     image.onload = function () {
                         ctx.drawImage(image, 0, 0);
