@@ -2,7 +2,9 @@
     import { onMount } from "svelte";
     import { variables } from '$lib/variables';
     import { decompress } from 'lz-string';
+    import forge from "node-forge";
 
+    let publicKey = forge.pki.publicKeyFromPem(variables.PUBLIC_KEY);
     let socket;
     let message = "";
     let messages = [];
@@ -53,11 +55,17 @@
             switch (data.type) {
                 case "INCOMMING_STREAM":
                     // const img = document.querySelector('img');
-                    const image = new Image();
-                    image.onload = function () {
+                    let md = forge.md.sha256.create();
+                    md.update(data.frame);
+                    let signature = data.signature;
+                    let verified = publicKey.verify(md.digest().bytes(), signature);
+                    if (verified){
+                      const image = new Image();
+                      image.onload = function () {
                         ctx.drawImage(image, 0, 0);
-                    };
-                    image.src = decompress(data.frame);
+                      };
+                      image.src = decompress(data.frame);
+                    }
                     break;
                 case "CONFIRM_CONNECTION":
                     connectedStreamId = data.streamId;

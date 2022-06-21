@@ -3,10 +3,7 @@
     import { variables } from '$lib/variables';
     import forge from "node-forge";
 
-    let __dirname = "src/lib/components";
-    //let pKey = fs.readFileSync(path.join(__dirname, "private.pem"), 'utf8');
     let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
-    //let puKey = fs.readFileSync(path.join(__dirname, "public.pem"), 'utf8');
     let publicKey = forge.pki.publicKeyFromPem(variables.PUBLIC_KEY);
     console.log(privateKey);
     console.log(publicKey);
