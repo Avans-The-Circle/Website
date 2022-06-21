@@ -2,6 +2,9 @@
     import { variables } from "$lib/variables";
     import { onMount } from "svelte";
     import { compress, decompress } from "lz-string";
+    import forge from "node-forge";
+
+    let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
 
     onMount(() => {
         const video = document.querySelector("video");
@@ -48,11 +51,16 @@
                 frameCounter++;
                 const frameData = getFrame();
                 const compFrameData = compress(frameData);
+                let md = forge.md.sha256.create();
+                md.update(compFrameData);
+                let signature = privateKey.sign(md);
+                console.log(signature);
                 const data = {
                     type: "STREAM_FRAME",
                     frame: compFrameData,
                     frame_timing: (new Date()).getTime(),
-                    frameCounter: frameCounter
+                    frameCounter: frameCounter,
+                    signature: signature
                 }
                 send(data, socket);
                 console.log(`[${data.frameCounter}]Sending frame: ${data.frame_timing}`);

@@ -1,7 +1,12 @@
 <script>
     import { onMount } from "svelte";
     import { variables } from '$lib/variables';
+    import forge from "node-forge";
 
+    let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
+    let publicKey = forge.pki.publicKeyFromPem(variables.PUBLIC_KEY);
+    console.log(privateKey);
+    console.log(publicKey);
     let socket;
     let message = "";
     let messages = [];
@@ -48,9 +53,15 @@
             const data = JSON.parse(event.data);
             switch (data.type) {
                 case "CHAT_MESSAGE":
-                    messages.push(data);
-                    // For reactivity:
-                    messages = messages;
+                    let md = forge.md.sha256.create();
+                    md.update(data.message, "utf8");
+                    let signature = data.signature;
+                    let verified = publicKey.verify(md.digest().bytes(), signature);
+                    if (verified){
+                      messages.push(data);
+                      // For reactivity:
+                      messages = messages;
+                    }
                     setTimeout(() => {
                         scrollSmoothlyToBottom();
                     }, 250)
@@ -76,10 +87,15 @@
             alert("Chat server connection issue. Check console for more info.")
             return;
         }
+        let md = forge.md.sha256.create();
+        md.update(message, "utf8")
+        let signature = privateKey.sign(md);
+        console.log(signature);
         socket.send(JSON.stringify({
             type: "SEND_MESSAGE",
             sender: "Je moeder",
-            message: message
+            message: message,
+            signature: signature
         }));
         message = "";
     }
