@@ -1,9 +1,13 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
     import { variables } from '$lib/variables';
+    import forge from "node-forge";
 
     const dispatch = createEventDispatcher();
     export let canSendMessage = true;
+    let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
+    let publicKey = forge.pki.publicKeyFromPem(variables.PUBLIC_KEY);
+    let socket;
     let message = "";
     let messages = [];
     const randomId = Math.round(Math.random() * 10000000000);

@@ -2,8 +2,10 @@
     import { variables } from "$lib/variables";
     import { onDestroy, onMount } from "svelte";
     import { compress, decompress } from "lz-string";
+    import forge from "node-forge";
     import Chat from "/src/lib/components/chat.svelte"
 
+    let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
     let streamId = "1";
     let connectedStreamId = "";
     let chatChild;
@@ -97,11 +99,15 @@
         fps = Math.floor((1000 / (currentFpsTime - lastFpsTime)) * 100) / 100
         lastFpsTime = currentFpsTime
         const compFrameData = compress(frameData);
+        let md = forge.md.sha256.create();
+        md.update(compFrameData);
+        let signature = privateKey.sign(md);
         const data = {
             type: "STREAM_FRAME",
             frame: compFrameData,
             frame_timing: (new Date()).getTime(),
-            frameCounter: frameCounter
+            frameCounter: frameCounter,
+            signature: signature
         }
         send(data, socket);
         console.log(`[${data.frameCounter}]Sending frame: ${data.frame_timing}`);
