@@ -2,26 +2,29 @@
     import { variables } from "$lib/variables";
     import { onDestroy, onMount } from "svelte";
     import { compress, decompress } from "lz-string";
+    import Chat from "/src/lib/components/chat.svelte"
 
     let streamId = "1";
     let connectedStreamId = "";
-    $: {
-        if (isSocketConnected() && connectedStreamId !== streamId) {
-            socket.send(JSON.stringify({
-                type: "OPEN_CONNECTION",
-                streamId: streamId,
-                isStreamer: true
-            }))
-        }
-    }
+    let chatChild;
     let frameCounter = 0;
     let clientCount = 0;
     let socket;
     let video;
     let pageActive = false;
     let fps = 0;
-    const FPS_LIMIT = 60;
     let lastFpsTime = (new Date()).getTime()
+
+    $: {
+        if (isSocketConnected() && connectedStreamId !== streamId) {
+            socket.send(JSON.stringify({
+                type: "OPEN_CONNECTION",
+                streamId: streamId,
+                isStreamer: true,
+                isChatter: true,
+            }))
+        }
+    }
 
     const connectToSocket = () => {
         if (!pageActive) {
@@ -45,7 +48,8 @@
                 JSON.stringify({
                     type: "OPEN_CONNECTION",
                     streamId: streamId,
-                    isStreamer: true
+                    isStreamer: true,
+                    isChatter: true,
                 })
             );
             sendFrame()
@@ -55,8 +59,11 @@
             //console.log(`[websocket_message] Data received from server: ${event.data}`);
             const data = JSON.parse(event.data);
             switch (data.type) {
+                case "CHAT_MESSAGE":
+                    chatChild.addChat(data);
+                    break;
                 case "SEND_NEXT_FRAME":
-                    console.log("received request for next frame")
+                    // console.log("received request for next frame")
                     clientCount = data.clientCount
                     sendFrame();
                     // setTimeout(sendFrame, 1000);
@@ -75,7 +82,7 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext("2d").drawImage(video, 0, 0);
-        return canvas.toDataURL("image/png");
+        return canvas.toDataURL("image/jpeg");
     };
 
     function sendFrame() {
@@ -87,12 +94,7 @@
         }
         frameCounter++;
         const currentFpsTime = (new Date()).getTime();
-        console.log("ms:", currentFpsTime - lastFpsTime)
         fps = Math.floor((1000 / (currentFpsTime - lastFpsTime)) * 100) / 100
-        if (fps > FPS_LIMIT) {
-            setTimeout(sendFrame, 50)
-            return;
-        }
         lastFpsTime = currentFpsTime
         const compFrameData = compress(frameData);
         const data = {
@@ -146,5 +148,13 @@
 <label>Streaming with {fps} FPS</label><br>
 <br>
 <br>
-<video id="videoStream" autoplay />
+<div class="row">
+  <div class="col-8">
+    <video id="videoStream" autoplay></video>
+  </div>
+
+  <div class="col-4" style="padding-left: 0;">
+    <Chat bind:this={chatChild} canSendMessage={false} />
+  </div>
+</div>
 

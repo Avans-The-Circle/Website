@@ -3,6 +3,7 @@
     import { variables } from '$lib/variables';
 
     const dispatch = createEventDispatcher();
+    export let canSendMessage = true;
     let message = "";
     let messages = [];
     const randomId = Math.round(Math.random() * 10000000000);
@@ -55,8 +56,10 @@
       </div>
     {/each}
   </div>
-  <div class="position-absolute bottom-0" style="bottom: 0;">
-    <input class="d-inline-block" on:keydown={keyDownChat} type="text" bind:value={message}>
-    <input class="d-inline-block" type="submit" on:click={sendMessage}>
-  </div>
+  {#if canSendMessage}
+    <div class="position-absolute bottom-0" style="bottom: 0;">
+      <input class="d-inline-block" on:keydown={keyDownChat} type="text" bind:value={message}>
+      <input class="d-inline-block" type="submit" on:click={sendMessage}>
+    </div>
+  {/if}
 </div>
