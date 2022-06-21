@@ -19,6 +19,9 @@
     let socket;
     let video;
     let pageActive = false;
+    let fps = 0;
+    const FPS_LIMIT = 60;
+    let lastFpsTime = (new Date()).getTime()
 
     const connectToSocket = () => {
         if (!pageActive) {
@@ -72,7 +75,7 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext("2d").drawImage(video, 0, 0);
-        return canvas.toDataURL("image/png");
+        return canvas.toDataURL("image/png", 1.0);
     };
 
     function sendFrame() {
@@ -83,6 +86,14 @@
             return;
         }
         frameCounter++;
+        const currentFpsTime = (new Date()).getTime();
+        console.log("ms:", currentFpsTime - lastFpsTime)
+        fps = Math.floor((1000 / (currentFpsTime - lastFpsTime)) * 100) / 100
+        if (fps > FPS_LIMIT) {
+            setTimeout(sendFrame, 50)
+            return;
+        }
+        lastFpsTime = currentFpsTime
         const compFrameData = compress(frameData);
         const data = {
             type: "STREAM_FRAME",
@@ -130,9 +141,10 @@
   <input id="streamId" type="text" bind:value={streamId}>
 </div>
 
+<label for="videoStream">View count: {clientCount}</label><br>
+<label>Amount of frames send: {frameCounter}</label><br>
+<label>Streaming with {fps} FPS</label><br>
 <br>
-<label for="videoStream">View count: {clientCount}</label>
-<label>Amount of frames send: {frameCounter}</label>
 <br>
 <video id="videoStream" autoplay />
 

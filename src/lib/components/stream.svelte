@@ -14,6 +14,8 @@
     export function processStream(frame) {
         const image = new Image();
         image.onload = function () {
+            canvas.width = image.naturalWidth
+            canvas.height = image.naturalHeight
             ctx.drawImage(image, 0, 0);
         };
         image.src = decompress(frame);
