@@ -136,7 +136,7 @@
         let signature = privateKey.sign(md);
         socket.send(JSON.stringify({
             type: "SEND_MESSAGE",
-            sender: "Je moeder",
+            sender: "Chatter",
             message: message,
             signature: signature
         }));
