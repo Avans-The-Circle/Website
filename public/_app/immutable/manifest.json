@@ -1,10 +1,10 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-e612365b.js",
+    "file": "start-ed198cc0.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
-      "_index-7f5e128c.js"
+      "_index-b9fb2fa5.js"
     ],
     "dynamicImports": [
       "src/routes/__layout.svelte",
@@ -14,50 +14,59 @@
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-161f8f7a.js",
+    "file": "pages/__layout.svelte-064712a8.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-7f5e128c.js"
+      "_index-b9fb2fa5.js",
+      "_userManager-33287769.js"
+    ],
+    "css": [
+      "assets/pages/__layout.svelte-0af3809e.css"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
-    "file": "error.svelte-2058dd42.js",
+    "file": "error.svelte-8220a509.js",
     "src": ".svelte-kit/runtime/components/error.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-7f5e128c.js"
+      "_index-b9fb2fa5.js"
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-26c3eb80.js",
+    "file": "pages/index.svelte-32044d57.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-7f5e128c.js",
-      "_chat-70621a68.js"
+      "_index-b9fb2fa5.js",
+      "_chat-8757c9ac.js",
+      "_userManager-33287769.js"
     ]
   },
   "src/routes/stream.svelte": {
-    "file": "pages/stream.svelte-3d210d5f.js",
+    "file": "pages/stream.svelte-afd74e86.js",
     "src": "src/routes/stream.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-7f5e128c.js",
-      "_chat-70621a68.js"
+      "_index-b9fb2fa5.js",
+      "_chat-8757c9ac.js",
+      "_userManager-33287769.js"
     ]
   },
-  "_index-7f5e128c.js": {
-    "file": "chunks/index-7f5e128c.js"
+  "_index-b9fb2fa5.js": {
+    "file": "chunks/index-b9fb2fa5.js"
   },
-  "_chat-70621a68.js": {
-    "file": "chunks/chat-70621a68.js",
+  "_userManager-33287769.js": {
+    "file": "chunks/userManager-33287769.js"
+  },
+  "_chat-8757c9ac.js": {
+    "file": "chunks/chat-8757c9ac.js",
     "imports": [
-      "_index-7f5e128c.js"
+      "_index-b9fb2fa5.js"
     ]
   }
 }
