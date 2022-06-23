@@ -1,45 +1,94 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-b9ed0938.js",
+    "file": "start-e9fb413e.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
-      "_index-2f69105a.js"
+      "_index-7f5e128c.js",
+      "_preload-helper-60cab3ee.js"
     ],
     "dynamicImports": [
       "src/routes/__layout.svelte",
       ".svelte-kit/runtime/components/error.svelte",
-      "src/routes/index.svelte"
+      "src/routes/index.svelte",
+      "src/routes/stream.svelte",
+      "src/routes/stream_camera.svelte"
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-1327a4e4.js",
+    "file": "pages/__layout.svelte-161f8f7a.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-2f69105a.js"
+      "_index-7f5e128c.js"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
-    "file": "error.svelte-3df580b0.js",
+    "file": "error.svelte-2058dd42.js",
     "src": ".svelte-kit/runtime/components/error.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-2f69105a.js"
+      "_index-7f5e128c.js"
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-5636ecfd.js",
+    "file": "pages/index.svelte-f8f64b41.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-2f69105a.js"
+      "_index-7f5e128c.js",
+      "_chat-4571303b.js",
+      "__commonjsHelpers-15fb5e92.js"
     ]
   },
-  "_index-2f69105a.js": {
-    "file": "chunks/index-2f69105a.js"
+  "src/routes/stream.svelte": {
+    "file": "pages/stream.svelte-7900f4a7.js",
+    "src": "src/routes/stream.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-7f5e128c.js",
+      "_chat-4571303b.js",
+      "__commonjsHelpers-15fb5e92.js"
+    ]
+  },
+  "src/routes/stream_camera.svelte": {
+    "file": "pages/stream_camera.svelte-090ee37b.js",
+    "src": "src/routes/stream_camera.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_preload-helper-60cab3ee.js",
+      "_index-7f5e128c.js"
+    ],
+    "dynamicImports": [
+      "_AgoraRTCSDK.min-2290ef5a.js"
+    ]
+  },
+  "_index-7f5e128c.js": {
+    "file": "chunks/index-7f5e128c.js"
+  },
+  "_preload-helper-60cab3ee.js": {
+    "file": "chunks/preload-helper-60cab3ee.js"
+  },
+  "_chat-4571303b.js": {
+    "file": "chunks/chat-4571303b.js",
+    "imports": [
+      "__commonjsHelpers-15fb5e92.js",
+      "_index-7f5e128c.js"
+    ]
+  },
+  "__commonjsHelpers-15fb5e92.js": {
+    "file": "chunks/_commonjsHelpers-15fb5e92.js"
+  },
+  "_AgoraRTCSDK.min-2290ef5a.js": {
+    "file": "chunks/AgoraRTCSDK.min-2290ef5a.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "__commonjsHelpers-15fb5e92.js"
+    ]
   }
 }
