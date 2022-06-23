@@ -1,18 +1,16 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-e993cdb0.js",
+    "file": "start-463420c5.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
-      "_index-7f5e128c.js",
-      "_preload-helper-60cab3ee.js"
+      "_index-7f5e128c.js"
     ],
     "dynamicImports": [
       "src/routes/__layout.svelte",
       ".svelte-kit/runtime/components/error.svelte",
       "src/routes/index.svelte",
-      "src/routes/stream.svelte",
-      "src/routes/stream_camera.svelte"
+      "src/routes/stream.svelte"
     ]
   },
   "src/routes/__layout.svelte": {
@@ -34,61 +32,32 @@
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-f8f64b41.js",
+    "file": "pages/index.svelte-abf5b5df.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-7f5e128c.js",
-      "_chat-4571303b.js",
-      "__commonjsHelpers-15fb5e92.js"
+      "_chat-3c89cb3a.js"
     ]
   },
   "src/routes/stream.svelte": {
-    "file": "pages/stream.svelte-566a0617.js",
+    "file": "pages/stream.svelte-4477470e.js",
     "src": "src/routes/stream.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-7f5e128c.js",
-      "_chat-4571303b.js",
-      "__commonjsHelpers-15fb5e92.js"
-    ]
-  },
-  "src/routes/stream_camera.svelte": {
-    "file": "pages/stream_camera.svelte-090ee37b.js",
-    "src": "src/routes/stream_camera.svelte",
-    "isEntry": true,
-    "isDynamicEntry": true,
-    "imports": [
-      "_preload-helper-60cab3ee.js",
-      "_index-7f5e128c.js"
-    ],
-    "dynamicImports": [
-      "_AgoraRTCSDK.min-2290ef5a.js"
+      "_chat-3c89cb3a.js"
     ]
   },
   "_index-7f5e128c.js": {
     "file": "chunks/index-7f5e128c.js"
   },
-  "_preload-helper-60cab3ee.js": {
-    "file": "chunks/preload-helper-60cab3ee.js"
-  },
-  "_chat-4571303b.js": {
-    "file": "chunks/chat-4571303b.js",
+  "_chat-3c89cb3a.js": {
+    "file": "chunks/chat-3c89cb3a.js",
     "imports": [
-      "__commonjsHelpers-15fb5e92.js",
       "_index-7f5e128c.js"
-    ]
-  },
-  "__commonjsHelpers-15fb5e92.js": {
-    "file": "chunks/_commonjsHelpers-15fb5e92.js"
-  },
-  "_AgoraRTCSDK.min-2290ef5a.js": {
-    "file": "chunks/AgoraRTCSDK.min-2290ef5a.js",
-    "isDynamicEntry": true,
-    "imports": [
-      "__commonjsHelpers-15fb5e92.js"
     ]
   }
 }

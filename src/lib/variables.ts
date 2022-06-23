@@ -1,6 +1,6 @@
 export const variables = {
-    // CHATSERVER_URL: "wss://localhost:8080",
-    PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----"+
+    CHATSERVER_URL: import.meta.env.VITE_CHATSERVER_URL,
+    PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----" +
         "MIIJQwIBADANBgkqhkiG9w0BAQEFAASCCS0wggkpAgEAAoICAQCvSHvBojgKRgWt" +
         "FLdSrOJcNkWz1saFFKyRzNyfvnzd4s8vBSfeUdvGfBFPllplXwOarCWuL+r9s67k" +
         "N++P2/pi+5bAxyssAF6mWk1akcZwPLf1KBbmU4G8bscrL5kSQsSyqgMaHE7rD1pl" +
@@ -65,6 +65,5 @@ export const variables = {
         "E+BX3yDFWo31dc9x+YSz9xlx2+te55HRaeJeS7a6ta3SGm1UqGCWFeDWulu70d3L" +
         "TclTtupHXb3gil89m0xN4I6fCH73G5SyxxOwmHBWp/QQZ3x4uLU8UFWEac4aOJ7l" +
         "gDPrJZedWhqgQdBrKqZAVtUCAwEAAQ==" +
-        "-----END PUBLIC KEY-----",
-    CHATSERVER_URL: import.meta.env.VITE_CHATSERVER_URL
+        "-----END PUBLIC KEY-----"
 };
