@@ -1,9 +1,11 @@
 <script>
+    // @ts-nocheck
+
     import { variables } from "$lib/variables";
     import { onDestroy, onMount } from "svelte";
     import { compress, decompress } from "lz-string";
     import forge from "node-forge";
-    import Chat from "/src/lib/components/chat.svelte"
+    import Chat from "/src/lib/components/chat.svelte";
 
     let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
     let streamId = "1";
@@ -15,16 +17,18 @@
     let video;
     let pageActive = false;
     let fps = 0;
-    let lastFpsTime = (new Date()).getTime()
+    let lastFpsTime = new Date().getTime();
 
     $: {
         if (isSocketConnected() && connectedStreamId !== streamId) {
-            socket.send(JSON.stringify({
-                type: "OPEN_CONNECTION",
-                streamId: streamId,
-                isStreamer: true,
-                isChatter: true,
-            }))
+            socket.send(
+                JSON.stringify({
+                    type: "OPEN_CONNECTION",
+                    streamId: streamId,
+                    isStreamer: true,
+                    isChatter: true,
+                })
+            );
         }
     }
 
@@ -37,9 +41,11 @@
         socket.onclose = function (event) {
             connectedStreamId = "";
             if (event.wasClean) {
-                console.log(`[websocket_close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+                console.log(
+                    `[websocket_close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+                );
             } else {
-                console.log('[websocket_close] Connection died');
+                console.log("[websocket_close] Connection died");
             }
             // Always reconnect to webserver
             setTimeout(connectToSocket, 100);
@@ -54,7 +60,7 @@
                     isChatter: true,
                 })
             );
-            sendFrame()
+            sendFrame();
         };
 
         socket.onmessage = function (event) {
@@ -66,17 +72,17 @@
                     break;
                 case "SEND_NEXT_FRAME":
                     // console.log("received request for next frame")
-                    clientCount = data.clientCount
+                    clientCount = data.clientCount;
                     sendFrame();
                     // setTimeout(sendFrame, 1000);
                     break;
                 case "CONFIRM_CONNECTION":
                     connectedStreamId = data.streamId;
-                    console.log("Connected streamid", connectedStreamId)
+                    console.log("Connected streamid", connectedStreamId);
                     break;
             }
         };
-    }
+    };
 
     // returns a frame encoded in base64
     const getFrame = () => {
@@ -91,26 +97,32 @@
         const frameData = getFrame();
         // Frame is probably not ready jet
         if (frameData.length <= 10) {
-            setTimeout(sendFrame, 100)
+            setTimeout(sendFrame, 100);
             return;
         }
         frameCounter++;
-        const currentFpsTime = (new Date()).getTime();
-        fps = Math.floor((1000 / (currentFpsTime - lastFpsTime)) * 100) / 100
-        lastFpsTime = currentFpsTime
+        const currentFpsTime = new Date().getTime();
+        fps = Math.floor((1000 / (currentFpsTime - lastFpsTime)) * 100) / 100;
+        lastFpsTime = currentFpsTime;
         const compFrameData = compress(frameData);
         let md = forge.md.sha256.create();
         md.update(compFrameData);
+
+        // @ts-ignore
+        console.log(frameData);
+        doPost(frameData);
         let signature = privateKey.sign(md);
         const data = {
             type: "STREAM_FRAME",
             frame: compFrameData,
-            frame_timing: (new Date()).getTime(),
+            frame_timing: new Date().getTime(),
             frameCounter: frameCounter,
-            signature: signature
-        }
+            signature: signature,
+        };
         send(data, socket);
-        console.log(`[${data.frameCounter}]Sending frame: ${data.frame_timing}`);
+        console.log(
+            `[${data.frameCounter}]Sending frame: ${data.frame_timing}`
+        );
     }
 
     onDestroy(() => {
@@ -118,20 +130,20 @@
         if (isSocketConnected()) {
             socket.close();
         }
-    })
+    });
     onMount(() => {
         pageActive = true;
         video = document.querySelector("video");
         // request access to webcam
         navigator.mediaDevices
-            .getUserMedia({video: {width: 426, height: 240}})
+            .getUserMedia({ video: { width: 426, height: 240 } })
             .then((stream) => (video.srcObject = stream));
 
         connectToSocket();
     });
 
     function isSocketConnected() {
-        return !(socket === undefined || socket.readyState !== WebSocket.OPEN)
+        return !(socket === undefined || socket.readyState !== WebSocket.OPEN);
     }
 
     async function send(compFrameData, socket) {
@@ -142,26 +154,58 @@
         // const dataString = JSON.stringify({compressed: true, data: compress(dataJson)});
         // socket.send(dataString);
     }
+    async function doPost(data) {
+        var result = null;
+        var today = new Date();
+        var date =
+            today.getFullYear() +
+            "-" +
+            (today.getMonth() + 1) +
+            "-" +
+            today.getDate();
+        var time =
+            today.getHours() +
+            ":" +
+            today.getMinutes() +
+            ":" +
+            today.getSeconds();
+        var dateTime = date + " " + time;
+
+        const res = await fetch("http://localhost:8050/api/stream", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                stream: "Stream " + streamId,
+                base64: data,
+                timestamp: dateTime,
+            }),
+        });
+
+        const json = await res.json();
+        console.log(json);
+        result = JSON.stringify(json);
+    }
 </script>
 
 <div>
-  <label for="streamId">Enter your streamer name:</label>
-  <input id="streamId" type="text" bind:value={streamId}>
+    <label for="streamId">Enter your streamer name:</label>
+    <input id="streamId" type="text" bind:value={streamId} />
 </div>
 
-<label for="videoStream">View count: {clientCount}</label><br>
-<label>Amount of frames send: {frameCounter}</label><br>
-<label>Streaming with {fps} FPS</label><br>
-<label>Confirmed streamer name {connectedStreamId}</label><br>
-<br>
-<br>
+<label for="videoStream">View count: {clientCount}</label><br />
+<label>Amount of frames send: {frameCounter}</label><br />
+<label>Streaming with {fps} FPS</label><br />
+<label>Confirmed streamer name {connectedStreamId}</label><br />
+<br />
+<br />
 <div class="row">
-  <div class="col-8">
-    <video id="videoStream" autoplay></video>
-  </div>
+    <div class="col-8">
+        <video id="videoStream" autoplay />
+    </div>
 
-  <div class="col-4" style="padding-left: 0;">
-    <Chat bind:this={chatChild} canSendMessage={false} />
-  </div>
+    <div class="col-4" style="padding-left: 0;">
+        <Chat bind:this={chatChild} canSendMessage={false} />
+    </div>
 </div>
-
