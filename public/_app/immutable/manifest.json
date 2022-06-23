@@ -1,6 +1,6 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-7463d1c3.js",
+    "file": "start-e612365b.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
@@ -32,30 +32,30 @@
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-abf5b5df.js",
+    "file": "pages/index.svelte-26c3eb80.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-7f5e128c.js",
-      "_chat-3c89cb3a.js"
+      "_chat-70621a68.js"
     ]
   },
   "src/routes/stream.svelte": {
-    "file": "pages/stream.svelte-4477470e.js",
+    "file": "pages/stream.svelte-3d210d5f.js",
     "src": "src/routes/stream.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-7f5e128c.js",
-      "_chat-3c89cb3a.js"
+      "_chat-70621a68.js"
     ]
   },
   "_index-7f5e128c.js": {
     "file": "chunks/index-7f5e128c.js"
   },
-  "_chat-3c89cb3a.js": {
-    "file": "chunks/chat-3c89cb3a.js",
+  "_chat-70621a68.js": {
+    "file": "chunks/chat-70621a68.js",
     "imports": [
       "_index-7f5e128c.js"
     ]
