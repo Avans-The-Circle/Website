@@ -8,7 +8,7 @@
     import Chat from "/src/lib/components/chat.svelte";
 
     let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
-    let streamId = "1";
+    let streamId = Math.round(Math.random() * 10000);
     let connectedStreamId = "";
     let chatChild;
     let frameCounter = 0;
@@ -135,7 +135,7 @@
         video = document.querySelector("video");
         // request access to webcam
         navigator.mediaDevices
-            .getUserMedia({ video: { width: 426, height: 240 } })
+            .getUserMedia({video: {width: 426, height: 240}})
             .then((stream) => (video.srcObject = stream));
 
         connectToSocket();
@@ -156,8 +156,8 @@
 </script>
 
 <div>
-    <label for="streamId">Enter your streamer name:</label>
-    <input id="streamId" type="text" bind:value={streamId} />
+  <label for="streamId">Enter your streamer name:</label>
+  <input id="streamId" type="text" bind:value={streamId} />
 </div>
 
 <label for="videoStream">View count: {clientCount}</label><br />
@@ -167,11 +167,11 @@
 <br />
 <br />
 <div class="row">
-    <div class="col-8">
-        <video id="videoStream" autoplay />
-    </div>
+  <div class="col-8">
+    <video id="videoStream" autoplay />
+  </div>
 
-    <div class="col-4" style="padding-left: 0;">
-        <Chat bind:this={chatChild} canSendMessage={false} />
-    </div>
+  <div class="col-4" style="padding-left: 0;">
+    <Chat bind:this={chatChild} canSendMessage={false} />
+  </div>
 </div>
