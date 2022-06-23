@@ -1,5 +1,5 @@
 <script>
-    import StreamContainer from "/src/lib/components/streamContainer.svelte"
+    import StreamContainer from "/src/lib/components/streamContainer.svelte";
 </script>
 
 <div class="row" style="margin: 0;">

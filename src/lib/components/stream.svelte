@@ -33,5 +33,5 @@
 <div class="bg-warning position-relative" style="height: 100%; width: 100%">
   <label for="canvas-{randomId}">View count: {clientCount}</label>
   <br />
-  <canvas id="canvas-{randomId}" style="max-width: 100%; max-height: 100%; width: 100%;"></canvas>
+  <canvas id="canvas-{randomId}" style="max-width: 100%; max-height: calc(100% - 2rem); width: 100%;"></canvas>
 </div>

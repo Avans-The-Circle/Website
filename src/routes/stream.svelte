@@ -1,11 +1,10 @@
 <script>
-    // @ts-nocheck
-
     import { variables } from "$lib/variables";
     import { onDestroy, onMount } from "svelte";
     import { compress, decompress } from "lz-string";
     import forge from "node-forge";
     import Chat from "/src/lib/components/chat.svelte";
+    import { UserManager } from "../lib/classes/userManager";
 
     let privateKey = forge.pki.privateKeyFromPem(variables.PRIVATE_KEY);
     let streamId = Math.round(Math.random() * 10000);
@@ -108,8 +107,6 @@
         let md = forge.md.sha256.create();
         md.update(compFrameData);
 
-        // @ts-ignore
-        console.log(frameData);
         let signature = privateKey.sign(md);
         const data = {
             type: "STREAM_FRAME",
@@ -119,9 +116,7 @@
             signature: signature,
         };
         send(data, socket);
-        console.log(
-            `[${data.frameCounter}]Sending frame: ${data.frame_timing}`
-        );
+        console.log(`[${data.frameCounter}]Sending frame: ${data.frame_timing}`);
     }
 
     onDestroy(() => {
@@ -133,6 +128,7 @@
     onMount(() => {
         pageActive = true;
         video = document.querySelector("video");
+        streamId = UserManager.getUsername();
         // request access to webcam
         navigator.mediaDevices
             .getUserMedia({video: {width: 426, height: 240}})
@@ -155,10 +151,10 @@
     }
 </script>
 
-<div>
-  <label for="streamId">Enter your streamer name:</label>
-  <input id="streamId" type="text" bind:value={streamId} />
-</div>
+<!--<div>-->
+<!--  <label for="streamId">Enter your streamer name:</label>-->
+<!--  <input id="streamId" type="text" bind:value={streamId} />-->
+<!--</div>-->
 
 <label for="videoStream">View count: {clientCount}</label><br />
 <label>Amount of frames send: {frameCounter}</label><br />

@@ -3,8 +3,9 @@
     import { decompress } from "lz-string";
     import { variables } from '$lib/variables';
     import forge from "node-forge";
-    
 
+
+    import { UserManager } from "../classes/userManager";
     import Chat from "/src/lib/components/chat.svelte"
     import Stream from "/src/lib/components/stream.svelte"
 
@@ -19,6 +20,7 @@
     let chatChild;
     let pageActive = false;
     let streamerList = [];
+    let username = "";
 
     $: {
         if (isSocketConnected() && connectedStreamId !== streamId) {
@@ -39,40 +41,6 @@
     }
 
 
-    function setCookie(cname,cvalue,exdays) {
-  const d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  let expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
-
-function checkCookie() {
-  let user = getCookie("username");
-  if (user != "") {
-    //alert("Welcome again " + user);
-  } else {
-     user = prompt("Please enter your name:","");
-     if (user != "" && user != null) {
-       setCookie("username", user, 30);
-     }
-  }
-}
     function isSocketConnected() {
         return !(socket === undefined || socket.readyState !== WebSocket.OPEN)
     }
@@ -153,11 +121,11 @@ function checkCookie() {
     onMount(() => {
         pageActive = true;
         connectToSocket();
+        username = UserManager.getUsername();
     })
 
 
     async function sendMessage(e) {
-        let user = getCookie("username")
         const message = e.detail;
         console.log("Sending message: ", message)
         if (message === "") {
@@ -173,25 +141,17 @@ function checkCookie() {
         let signature = privateKey.sign(md);
         socket.send(JSON.stringify({
             type: "SEND_MESSAGE",
-            sender: user,
+            sender: username,
             message: message,
             signature: signature
         }));
     }
-
-    //checkCookie();
 </script>
 
-<div class="col" style="height: calc(49vh - 1.5rem); padding: 0;" >
-    
+<div class="col-md-6" style="height: calc(49vh - 1.5rem); padding: 0;">
+
 
   <select class="form-select" aria-label="Please select a stream..." bind:value={streamId}>
-    
-    {#if (true)}
-        {onMount(() => {
-            checkCookie()
-        })}
-    {/if}
     <option value="-1">Disconnected</option>
     {#each streamerList as streamerId}
       <option value="{streamerId}">Streamer {streamerId}</option>
@@ -205,8 +165,7 @@ function checkCookie() {
         <h1>Disconnected...</h1>
       {:else}
         <div class="col-8" style="padding-right: 0;">
-          {#if streamId === "-1"}
-          {:else }
+          {#if streamId !== "-1"}
             <Stream bind:clientCount={clientCount} bind:this={streamChild} />
           {/if}
         </div>
